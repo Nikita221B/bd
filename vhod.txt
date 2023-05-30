@@ -1,0 +1,124 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using System.Data.SqlClient;
+using System.Data.Common;
+ string connectionString = null;
+        SqlConnection sqlCnn;
+
+        SqlCommand SqlCommand;
+        string sql = null;
+
+        SqlDataAdapter dataAdapter1 = new SqlDataAdapter();
+        SqlDataAdapter dataAdapter2 = new SqlDataAdapter();
+        SqlDataAdapter dataAdapter3 = new SqlDataAdapter();
+        SqlDataAdapter dataAdapter4 = new SqlDataAdapter();
+        SqlDataAdapter dataAdapter5 = new SqlDataAdapter();
+
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            // объявление соединения (connection)
+            try
+            {
+                // Открытие соединения с БД
+                string name_server = textBox1.Text;     // DESKTOP-M7V0CUK
+                string name_db = textBox2.Text;         // ProjectOrganization
+                string name_pol = textBox3.Text;
+                string name_parol = textBox4.Text;
+
+                // Data Source=DESKTOP-M7V0CUK;Initial Catalog=ProjectOrganization;Integrated Security=True
+                connectionString = $"Data Source={name_server};Initial Catalog={name_db};Integrated Security=True;";
+                if (radioButton2.Checked == true)
+                {
+                    connectionString += $"User Id={name_pol};Password={name_parol};";
+                }
+
+                SqlConnection sqlConnection = new SqlConnection(connectionString);
+                sqlConnection.Open();
+                sqlConnection.Disposed += SqlConnection_Disposed;
+                sqlConnection.StateChange += SqlConnection_StateChange;
+                MessageBox.Show("Подключение успешно!");
+
+                // переход на 2-ю форму
+                Form2 f2 = new Form2();
+
+                // Отделы
+                sql = "SELECT * From Department";
+                SqlCommand = new SqlCommand(sql, sqlConnection);
+                dataAdapter1.SelectCommand = SqlCommand;
+
+                // Сотрудники
+                sql = "SELECT * From Staff";
+                SqlCommand = new SqlCommand(sql, sqlConnection);
+                dataAdapter2.SelectCommand = SqlCommand;
+
+                // Организации
+                sql = "SELECT * From Organization";
+                SqlCommand = new SqlCommand(sql, sqlConnection);
+                dataAdapter3.SelectCommand = SqlCommand;
+
+                // Контракты
+                sql = "SELECT * From Contract";
+                SqlCommand = new SqlCommand(sql, sqlConnection);
+                dataAdapter4.SelectCommand = SqlCommand;
+
+                // Проектные работы
+                sql = "SELECT * From ProjectWork";
+                SqlCommand = new SqlCommand(sql, sqlConnection);
+                dataAdapter5.SelectCommand = SqlCommand;
+
+                DataSet ds = new DataSet();
+                dataAdapter1.Fill(ds, "Отделы");
+                dataAdapter2.Fill(ds, "Сотрудники");
+                dataAdapter3.Fill(ds, "Организации");
+                dataAdapter4.Fill(ds, "Контракты");
+                dataAdapter5.Fill(ds, "Проектные работы");
+
+                f2.dataGrid1.DataSource = ds.Tables["Отделы"].DefaultView;
+                f2.dataGrid2.DataSource = ds.Tables["Сотрудники"].DefaultView;
+                f2.dataGrid3.DataSource = ds.Tables["Организации"].DefaultView;
+                f2.dataGrid4.DataSource = ds.Tables["Контракты"].DefaultView;
+                f2.dataGrid5.DataSource = ds.Tables["Проектные работы"].DefaultView;
+
+                f2.Show();
+                sqlConnection.Dispose();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Соединение не установлено!" + ex.Message);
+            }
+            finally
+            {
+                try
+                {
+                    // закрытие соединения
+                }
+                catch (Exception)
+                {
+                    // Handle exception
+                }
+            }
+        }
+
+        private void SqlConnection_Disposed(object sender, EventArgs e)
+        {
+            label5.Text = "Событие Dispose";
+        }
+
+        private void SqlConnection_StateChange(object sender, StateChangeEventArgs e)
+        {
+            label6.Text = "Исходное состояни: " + e.OriginalState.ToString() + "\nТекущее состояние:" + e.CurrentState.ToString();
+        }
+    }
+}

@@ -1,0 +1,7 @@
+ //удаление записи
+            sql1 = "DELETE FROM Department WHERE DepartmentName = 'Робототехнический'";
+            sqlCmd = new SqlCommand(sql1, sqlCnn);
+            adapter.DeleteCommand = sqlCmd;
+            sqlCmd.ExecuteNonQuery();
+            adapter.Update(ds, "Отделы");
+            this.dataGridView1.Update();

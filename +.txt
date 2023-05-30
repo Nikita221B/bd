@@ -1,0 +1,7 @@
+ //добавление записии
+            sql1 = "INSERT INTO Department (DepartmentName, Floor, PhoneNumber, DepartmentHead)" + "VALUES ('Робототехнический', '2', '8347523', 'Калашников А.В.')";
+            sqlCmd = new SqlCommand(sql1, sqlCnn);
+            adapter.InsertCommand= sqlCmd;
+            sqlCmd.ExecuteNonQuery();
+            adapter.Update(ds, "Отделы");
+            this.dataGridView1.Update();

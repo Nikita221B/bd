@@ -1,0 +1,72 @@
+  private void button2_Click(object sender, EventArgs e)  // сортрировка
+        {
+            // выбор, по какому столбцу производится сортировка
+            switch(listBox1.SelectedIndex)
+            {
+                case 0: Col = dataGridView1.Columns[0]; break;
+                case 1: Col = dataGridView1.Columns[1]; break;
+                case 2: Col = dataGridView1.Columns[2]; break;
+                case 3: Col = dataGridView1.Columns[3]; break;
+                case 4: Col = dataGridView1.Columns[4]; break;
+            }
+
+            // сортировать по возрастанию/убыванию
+            if (radioButton1.Checked)
+                dataGridView1.Sort(Col, ListSortDirection.Ascending);   // по возрастанию
+            else if (radioButton2.Checked)
+                dataGridView1.Sort(Col, ListSortDirection.Descending);  // по убыванию
+        }
+private void button6_Click(object sender, EventArgs e)  // отмена
+        {
+            for (int i = 0; i < dataGridView1.RowCount; i++)
+            {
+                dataGridView1.Rows[i].DefaultCellStyle.BackColor = Color.White; // очистка цвета строк таблицы
+                dataGridView1.Rows[i].Visible = true;                           // сделать все строками видимыми
+            }
+        }
+
+private void button3_Click(object sender, EventArgs e)  // поиск
+        {
+            // поиск данных
+            string poisk = textBox6.Text;
+
+            // очистка цвета строк таблицы перед поиском
+            for (int i = 0; i < dataGridView1.RowCount; i++)
+                dataGridView1.Rows[i].DefaultCellStyle.BackColor = Color.White;
+
+            for (int i = 0; i < dataGridView1.RowCount - 1; i++)
+                for (int j = 0; j < dataGridView1.ColumnCount - 1; j++)
+                {
+                    if (poisk == dataGridView1.Rows[i].Cells[j].Value.ToString())
+                        dataGridView1.Rows[i].DefaultCellStyle.BackColor = Color.Aqua;
+                }
+        }
+
+private void button4_Click(object sender, EventArgs e)  // отфильтровать
+        {
+            string poisk = textBox6.Text;
+            string isx_strica;
+
+            // фильтрация
+            for (int i = 0; i < dataGridView1.RowCount - 1; i++)
+            {
+                int indexOfSub = -1; //параметр для сохранения номера позиции строки, если -1 значит совпадений нет
+                for (int j = 0; j < dataGridView1.ColumnCount; j++)
+                {
+                    isx_strica = dataGridView1.Rows[i].Cells[j].Value.ToString();
+                    indexOfSub = isx_strica.IndexOf(poisk);
+                    if (indexOfSub >= 0) break;
+                }
+                if (indexOfSub >= 0)
+                {
+                    dataGridView1.Rows[i].Visible = true;
+                }
+                else
+                    dataGridView1.Rows[i].Visible = false;
+            }
+        }
+
+private void button5_Click(object sender, EventArgs e)  // закрыть
+        {
+            Close();
+        }

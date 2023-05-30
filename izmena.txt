@@ -1,0 +1,52 @@
+public partial class Form7 : Form
+{
+        SqlDataAdapter dataAdapter1 = new SqlDataAdapter();
+        DataSet ds1 = new DataSet();
+
+        string Sql;
+        SqlCommand myCommant;
+        int UspeshnoeIzmenenie;
+
+        string KeyDepartment, DepartmentName, Floor, PhoneNumber, DepartmentHead;
+
+        public Form7()
+        {
+            InitializeComponent();
+
+            dataAdapter1.SelectCommand = new SqlCommand("SELECT * FROM Department", DBConnection.Instance().Connection);
+            dataAdapter1.Fill(ds1, "Department");
+
+            textBox1.DataBindings.Add("Text", ds1, "Department.KeyDepartment");
+            textBox2.DataBindings.Add("Text", ds1, "Department.DepartmentName");
+            textBox3.DataBindings.Add("Text", ds1, "Department.Floor");
+            textBox4.DataBindings.Add("Text", ds1, "Department.PhoneNumber");
+            textBox5.DataBindings.Add("Text", ds1, "Department.DepartmentHead");
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            this.BindingContext[ds1, "Department"].Position--;
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            this.BindingContext[ds1, "Department"].Position++;
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            this.BindingContext[ds1, "Department"].Position = 0;
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            this.BindingContext[ds1, "Department"].Position = ds1.Tables["Department"].Rows.Count - 1;
+}
+//
+   //изменение записи
+            sql1 = "UPDATE Department SET PhoneNumber = PhoneNumber + 5";
+            sqlCmd = new SqlCommand(sql1, sqlCnn);
+            adapter.UpdateCommand = sqlCmd;
+            sqlCmd.ExecuteNonQuery();
+            adapter.Update(ds, "Отделы");
+            this.dataGridView1.Update();

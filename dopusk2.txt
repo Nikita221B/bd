@@ -1,0 +1,19 @@
+public partial class Form2 : Form
+    {
+        SqlDataAdapter dataAdapter1 = new SqlDataAdapter();
+        DataSet ds1 = new DataSet();
+        BindingSource bs = new BindingSource();
+
+        public Form2()
+        {
+            InitializeComponent();
+            dataAdapter1.SelectCommand = new SqlCommand("Select * from Department", DBConnection.Instance().Connection);
+            dataAdapter1.Fill(ds1, "Department");
+            bs.DataSource = ds1;
+            bs.DataMember = "Department";
+
+            dataGridView1.DataSource = bs;
+
+            bindingNavigator1.BindingSource = bs;
+        }
+    }

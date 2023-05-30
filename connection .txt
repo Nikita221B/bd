@@ -1,0 +1,27 @@
+namespace WindowsFormsApp5
+{
+    internal class DBConnection
+    {
+        private DBConnection() { }
+        private static DBConnection m_oConnection= null;
+
+        public static DBConnection Instance()
+        {
+            if (m_oConnection == null)
+                m_oConnection = new DBConnection();
+            return m_oConnection;
+        }
+
+        private SqlConnection connection = new SqlConnection(@"Data Source=DESKTOP-M7V0CUK;Initial Catalog=ProjectOrganization;Integrated Security=True");
+
+        public void Open()
+        {
+            connection.Open();
+        }
+        public void Close()
+        {
+            connection.Close();
+        }
+        public SqlConnection Connection { get { return connection; } }
+    }
+}
